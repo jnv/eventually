@@ -21,6 +21,16 @@ gem 'rails', '~> 4.0.0.beta1'
 # To use debugger
 # gem 'debugger'
 
+group :assets do
+  gem 'sass-rails',   '~> 4.0.0.beta1'
+  gem 'coffee-rails', '~> 4.0.0.beta1'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer', platforms: :ruby
+
+  gem 'uglifier', '>= 1.0.3'
+end
+
 gem 'mongoid', github: 'mongoid/mongoid'
 
 gem 'requirejs-rails', github: 'jwhitley/requirejs-rails'
@@ -28,6 +38,8 @@ gem 'requirejs-rails', github: 'jwhitley/requirejs-rails'
 group :test, :development do
   gem 'minitest-rails'
 end
+
+
 
 gem 'foreman'
 gem 'thin'#, '~> 2.0.0.pre'
