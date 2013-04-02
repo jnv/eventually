@@ -28,3 +28,6 @@ gem 'requirejs-rails', github: 'jwhitley/requirejs-rails'
 group :test, :development do
   gem 'minitest-rails'
 end
+
+gem 'foreman'
+gem 'thin'#, '~> 2.0.0.pre'
