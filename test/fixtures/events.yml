@@ -1,0 +1,18 @@
+# Read about fixtures at
+# http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  series: MyString
+  name: MyString
+  speaker: MyString
+  description: MyString
+  start: 2013-04-02 13:27:07
+  length: 1
+
+two:
+  series: MyString
+  name: MyString
+  speaker: MyString
+  description: MyString
+  start: 2013-04-02 13:27:07
+  length: 1
