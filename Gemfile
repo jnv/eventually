@@ -31,6 +31,8 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+gem 'jquery-rails'
+
 gem 'mongoid', github: 'mongoid/mongoid'
 
 gem 'requirejs-rails', github: 'jwhitley/requirejs-rails'
