@@ -1,5 +1,9 @@
 Eventually::Application.routes.draw do
-  resources :events
+  resources :events do
+    collection do
+      get :latest
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

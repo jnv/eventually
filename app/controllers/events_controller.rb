@@ -45,6 +45,11 @@ class EventsController < ApplicationController
     redirect_to events_url, notice: 'Event was successfully destroyed.'
   end
 
+  def latest
+    @event = Event.latest
+    render action: 'show'
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_event
