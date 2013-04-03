@@ -47,7 +47,14 @@ class EventsController < ApplicationController
 
   def latest
     @event = Event.latest
-    render action: 'show'
+    respond_to do |format|
+      format.html { render action: 'show' }
+      format.js
+    end
+  end
+
+  def bookmarklet
+    @event = Event.latest
   end
 
   private
