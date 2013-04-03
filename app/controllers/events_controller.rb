@@ -53,28 +53,7 @@ class EventsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def event_params
-    attrs = params.require(:event).permit(:series, :name, :speaker, :description, :date, :start, :length)
-    date = filter_date(attrs, :date)
-    start = filter_time(attrs, :start)
-    attrs.merge({start: start, date: date})
+    params.require(:event).permit(:series, :name, :speaker, :description, :date, :start, :length)
   end
 
-  def composed_param(attributes, name)
-    attributes.collect do |key, value|
-      if key =~ /^#{Regexp.escape(name.to_s)}\((\d+)([fi])\)$/
-        attributes.delete(key)
-        [$1.to_i, value.send("to_#$2")]
-      end
-    end.compact.sort_by(&:first).map(&:last)
-  end
-
-  def filter_time(attributes, name)
-    attrs = composed_param(attributes, name)
-    Time.zone.local(*attrs) if attrs.empty?
-  end
-
-  def filter_date(attributes, name)
-    attrs = composed_param(attributes, name)
-    Date.new(*attrs) unless attrs.empty?
-  end
 end
