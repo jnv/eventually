@@ -6,8 +6,9 @@ class Event
   field :name, type: String
   field :speaker, type: String
   field :description, type: String
-  field :start, type: Time
-  field :length, type: Integer
+  field :date, type: Date, default: ->{ Date.today }
+  field :start, type: Time, default: ->{ '19:00' }
+  field :length, type: Integer, default: 180
 
   # You can define indexes on documents using the index macro:
   # index :field <, :unique => true>

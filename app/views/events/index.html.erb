@@ -6,7 +6,7 @@
       <th>Series</th>
       <th>Name</th>
       <th>Speaker</th>
-      <th>Description</th>
+      <th>Date</th>
       <th>Start</th>
       <th>Length</th>
       <th></th>
@@ -21,8 +21,8 @@
       <td><%= event.series %></td>
       <td><%= event.name %></td>
       <td><%= event.speaker %></td>
-      <td><%= event.description %></td>
-      <td><%= event.start %></td>
+      <td><%= event.date %></td>
+      <td><%= event.start.to_s(:time) %></td>
       <td><%= event.length %></td>
       <td><%= link_to 'Show', event %></td>
       <td><%= link_to 'Edit', edit_event_path(event) %></td>

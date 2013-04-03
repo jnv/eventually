@@ -25,11 +25,15 @@
   </div>
   <div class="field">
     <%= f.label :description %><br />
-    <%= f.text_field :description %>
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :date %><br />
+    <%= f.date_field :date, min: Date.today %>
   </div>
   <div class="field">
     <%= f.label :start %><br />
-    <%= f.datetime_select :start %>
+    <%= f.time_field :start %>
   </div>
   <div class="field">
     <%= f.label :length %><br />
