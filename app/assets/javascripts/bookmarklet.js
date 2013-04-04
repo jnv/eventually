@@ -40,6 +40,7 @@ function EventuallyBookmarklet(data, document, window)
             var str = this.data[prop];
             this.data[prop] = new Date(str);
         }, this);
+
         this.data.end = addMinutes(this.data.start, this.data.length);
         this.data.end_date = this.data.end;
 
@@ -58,6 +59,8 @@ function EventuallyBookmarklet(data, document, window)
 
         this.propFn = {};
     }
+    Mapper.prototype.setupForm = function ()
+    {};
     Mapper.prototype.getDate = function (property)
     {
         return new Date(this.data[property]);
@@ -104,6 +107,7 @@ function EventuallyBookmarklet(data, document, window)
     };
     Mapper.prototype.mapData = function ()
     {
+        this.setupForm();
         this.mapSelectors();
     };
 
@@ -248,69 +252,92 @@ function EventuallyBookmarklet(data, document, window)
     function GPlusMapper(data)
     {
         proto(GPlusMapper.prototype).constructor.call(this, data);
-        this.topLevel = document.querySelector('form .eventsCreate');
+        this.topLevel = document.querySelector('.U-L-x');
+        if(!this.topLevel)
+        {
+            console.log('topLevel selector not found');
+        }
 
         this.propFn = {
             name: function (target, value, self)
             {
                 target.value = self.getName();
-            },
-            description: function (target, value)
-            {
-                target.onkeydown();
-                target.innerHTML = value;
-                // target.dispatchEvent(createEvent('keyup'));
+                target.dispatchEvent(createEvent('input'));
             },
             date: function (target, d, self)
             {
+                // console.log(target);
                 target.value = self.formatDate(d);
-            },
-            venue: function (target, value)
-            {
-                target.value = value;
-                target.dispatchEvent(createEvent('keydown'));
+                target.blur();
             },
             start: function (target, d, self)
             {
-                target.value = d.getUTCHours() * 60 * 60;
+                target.value = self.formatTime(d);
+                target.blur();
+                // target.keyup();
             },
             end: function (target, d, self)
             {
                 target.value = self.formatTime(d);
+                target.blur();
             },
             end_date: function (target, d, self)
             {
                 target.value = self.formatDate(d);
+                target.blur();
+            },
+            venue: function (target, value)
+            {
+                target.value = value;
+                target.focus();
+                // target.dispatchEvent(createEvent('keyup'));
+            },
+            description: function (target, value)
+            {
+                target.innerHTML = value;
+                // target.dispatchEvent(createEvent('keyup'));
             }
         };
 
         this.selectors = {
-            name: '[name=title]',
-            description: '[name=details]', //Textarea
-            venue: '[name=location]',
-            date: '[name=when_date]',
-            start: '[name=when_time]' //when_time = h * 60 * 60
-            // end: '[name=end_time]',
-            // end_date: '[name=end]',
+            name: '.OQa',
+            date: '.lUa',
+            start: '.EKa',
+            end: '.DKa',
+            end_date: '.cbu3Kb',
+            venue: '.iVa',
+            description: '.dva [role=textbox]' //Div
         };
     }
     inheritPrototype(GPlusMapper, Mapper);
+    GPlusMapper.prototype.setupForm = function ()
+    {
+        this.clickEndTime();
+    };
     GPlusMapper.prototype.getName = function ()
     {
         return this.data.series + ': ' + this.data.name + ' (' + this.data.speaker + ')';
     };
-    GPlusMapper.prototype.formatTime = function (d) // 19:00
+    GPlusMapper.prototype.formatTime = function (d) // 6:30 PM
     {
         var hour = d.getUTCHours();
         var minute = d.getUTCMinutes();
-        return pad(hour) + ':' + pad(minute);
+        var ampm = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12;
+        return hour + ':' + pad(minute) + ' ' + ampm;
     };
-    GPlusMapper.prototype.formatDate = function (d) //4/19/2013
+    GPlusMapper.prototype.formatDate = function (d) //Thu, Apr 4, 2013
     {
-        var day = d.getDate();
-        var month = d.getMonth() + 1;
-        var year = d.getFullYear();
-        return month + '/' + day + '/' + year;
+        var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var day = d.getUTCDate();
+        var month = monthNames[d.getUTCMonth()];
+        var year = d.getUTCFullYear();
+        return month + ' ' + day + ', ' + year;
+    };
+    GPlusMapper.prototype.clickEndTime = function ()
+    {
+        this.topLevel.querySelector('.ad.cva').click();
+        // return this.data.series + ': ' + this.data.name + ' (' + this.data.speaker + ')';
     };
 
     // var location = document.URL;
