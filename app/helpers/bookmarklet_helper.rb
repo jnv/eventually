@@ -14,7 +14,7 @@ module BookmarkletHelper
     end
 
     return "javascript:(function(){var d=document,z=d.createElement('scr'+'ipt'),b=d.body;try{" +
-      "if(!b)throw(0);z.setAttribute('src','" + full_url + "');b.appendChild(z);}" +
+      "if(!b)throw(0);z.setAttribute('src','" + full_url + "?r='+Math.random());b.appendChild(z);}" +
       "catch(e){alert('" + error_message + "');}}).call(this);"
   end
 end
