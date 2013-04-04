@@ -2,7 +2,6 @@ Eventually::Application.routes.draw do
   resources :events do
     collection do
       get :latest
-      get :bookmarklet
     end
   end
 

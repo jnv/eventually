@@ -1,0 +1,14 @@
+<% @events.reverse.each do |event| %>
+<div class="event">
+<span class="date"><%= l(event.date, format: :long).downcase %></span>
+<h3><%= event.name %></h3>
+<div class="author"><%= event.speaker %></div>
+<div class="links">
+  <%= link_to 'Facebook', event.facebook_url %> |
+  <%= link_to 'Google+', event.gplus_url %> |
+  <%= link_to 'Srazy.info', event.srazy_url %>
+</div>
+<%= event.description %>
+</div>
+
+<% end %>
