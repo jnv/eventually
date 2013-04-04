@@ -35,12 +35,19 @@
   <%= @event.start.to_s(:time) %>
 </p>
 
-
 <p>
   <strong>Length:</strong>
   <%= @event.length %>
 </p>
 
+<dl>
+  <dt>Facebook</dt>
+  <dd><%= link_to(@event.facebook_url, @event.facebook_url) %></dd>
+  <dt>Srazy</dt>
+  <dd><%= link_to(@event.srazy_url, @event.srazy_url) %></dd>
+  <dt>Google+</dt>
+  <dd><%= link_to(@event.gplus_url, @event.gplus_url) %></dd>
+</dl>
 
 <%= link_to 'Edit', edit_event_path(@event) %> |
 <%= link_to 'Back', events_path %>
