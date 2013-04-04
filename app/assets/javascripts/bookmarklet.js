@@ -18,9 +18,30 @@ function EventuallyBookmarklet(data, document, window)
         return evt;
     }
 
+    function pad(num)
+    {
+        if (num < 10)
+        {
+            return '0' + num;
+        }
+        return '' + num;
+    }
+
+    function addMinutes(date, minutes)
+    {
+        return new Date(date.getTime() + minutes * 60000);
+    }
+
     function Mapper(data)
     {
-        this.data = data;
+        this.data = Object.create(data);
+        ['date', 'start'].forEach(function (prop, i, props)
+        {
+            var str = this.data[prop];
+            this.data[prop] = new Date(str);
+        }, this);
+        this.end = addMinutes(this.data.start, this.data.end);
+
         this.topLevel = document;
 
         this.selectors = {
@@ -35,6 +56,10 @@ function EventuallyBookmarklet(data, document, window)
 
         this.propFn = {};
     }
+    Mapper.prototype.getDate = function (property)
+    {
+        return new Date(this.data[property]);
+    };
     Mapper.prototype.getName = function ()
     {
         return this.data.name;
@@ -55,7 +80,7 @@ function EventuallyBookmarklet(data, document, window)
         if (propFn)
         {
             console.log('using property function for ' + selector);
-            propFn(target, value);
+            propFn(target, value, this);
         }
         else
         {
@@ -94,12 +119,27 @@ function EventuallyBookmarklet(data, document, window)
             {
                 target.value = value;
                 target.dispatchEvent(createEvent('keyup'));
+            },
+            date: function (target, d) //2013-04-18
+            {
+                var day = d.getDate();
+                var month = d.getMonth() + 1;
+                var year = d.getFullYear();
+                target.value = year + '-' + pad(month) + '-' + pad(day);
+            },
+            start: function (target, d, self) // 19:00
+            {
+                target.value = self.formatTime(d);
+            },
+            end: function (target, d, self)
+            {
+                target.value = self.formatTime(d);
             }
         };
 
         this.selectors = {
             name: '[name=subtitle]',
-            date: '[name=start],[name=end]', //2013-04-03
+            date: '[name=start],[name=end]',
             start: '[name=start_time]',
             venue: '[name=venue]',
 
@@ -107,11 +147,14 @@ function EventuallyBookmarklet(data, document, window)
             end: '[name=end_time]'
         };
     }
+
     inheritPrototype(SrazyMapper, Mapper);
-    /*SrazyMapper.prototype.mapData = function ()
+    SrazyMapper.prototype.formatTime = function (d)
     {
-        this.mapSelectors();
-    };*/
+        var hour = d.getUTCHours();
+        var minute = d.getUTCMinutes();
+        return pad(hour) + ':' + pad(minute);
+    };
 
     // var Facebook = {
     //     name: '[name=title]',
