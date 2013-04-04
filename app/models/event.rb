@@ -17,7 +17,7 @@ class Event
 
   default_scope desc(:created_at)
 
-  before_validation :set_start_date
+  before_validation :set_start_date, :fix_gplus_url
 
   # You can define indexes on documents using the index macro:
   # index :field <, :unique => true>
@@ -29,10 +29,22 @@ class Event
     self.first
   end
 
+  def facebook_url
+    "https://www.facebook.com/events/#{facebook_id}"
+  end
+
   protected
   def set_start_date
     if date.is_a?(Date) && start.is_a?(Time)
       self.start = start.change(year: date.year, month: date.month, day: date.day)
+    end
+  end
+
+  def fix_gplus_url
+    return if gplus_url.blank?
+    match = gplus_url.match(/\/events\/(\w+)/)
+    if match
+      self.gplus_url = "https://plus.google.com#{match[0]}"
     end
   end
 end

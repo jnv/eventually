@@ -34,7 +34,7 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1
   def update
-    if @event.update(event_params)
+    if @event.update_attributes(event_params)
       redirect_to @event, notice: 'Event was successfully updated.'
     else
       render action: 'edit'
@@ -67,7 +67,7 @@ class EventsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def event_params
-    params.require(:event).permit(:series, :name, :speaker, :description, :date, :start, :venue, :length)
+    params.require(:event).permit(:series, :name, :speaker, :description, :date, :start, :venue, :length, :facebook_id, :srazy_url, :gplus_url)
   end
 
 end
