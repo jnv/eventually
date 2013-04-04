@@ -17,7 +17,7 @@ class Event
 
   default_scope desc(:created_at)
 
-  before_upsert :set_start_date
+  before_validation :set_start_date
 
   # You can define indexes on documents using the index macro:
   # index :field <, :unique => true>
