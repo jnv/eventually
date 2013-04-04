@@ -1,5 +1,8 @@
-(function(){
+(function(document, window){
+var data = <%= @event.to_json.html_safe %>;
 
+var EventuallyBookmarklet = <%= Rails.application.class.assets.find_asset('bookmarklet.js').body %>
 
+EventuallyBookmarklet(data, document, window);
 
-})();
+}(document,window));
