@@ -1,6 +1,8 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
+  skip_before_filter :verify_authenticity_token, :only => [:latest]
+
   # GET /events
   def index
     @events = Event.all
@@ -65,7 +67,7 @@ class EventsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def event_params
-    params.require(:event).permit(:series, :name, :speaker, :description, :date, :start, :length)
+    params.require(:event).permit(:series, :name, :speaker, :description, :date, :start, :venue, :length)
   end
 
 end

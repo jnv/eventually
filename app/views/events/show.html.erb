@@ -11,6 +11,11 @@
 </p>
 
 <p>
+  <strong>Venue:</strong>
+  <%= @event.venue %>
+</p>
+
+<p>
   <strong>Speaker:</strong>
   <%= @event.speaker %>
 </p>
@@ -21,9 +26,15 @@
 </p>
 
 <p>
-  <strong>Start:</strong>
-  <%= @event.start %>
+  <strong>Date:</strong>
+  <%= @event.date %>
 </p>
+
+<p>
+  <strong>Start:</strong>
+  <%= @event.start.to_s(:time) %>
+</p>
+
 
 <p>
   <strong>Length:</strong>

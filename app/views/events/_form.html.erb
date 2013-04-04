@@ -16,12 +16,16 @@
     <%= f.text_field :series %>
   </div>
   <div class="field">
+    <%= f.label :speaker %><br />
+    <%= f.text_field :speaker %>
+  </div>
+  <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :speaker %><br />
-    <%= f.text_field :speaker %>
+    <%= f.label :venue %><br />
+    <%= f.text_field :venue %>
   </div>
   <div class="field">
     <%= f.label :description %><br />
@@ -39,6 +43,20 @@
     <%= f.label :length %><br />
     <%= f.number_field :length %>
   </div>
+
+  <div class="field">
+    <%= f.label :facebook_id %><br />
+    <%= f.number_field :facebook_id %>
+  </div>
+  <div class="field">
+    <%= f.label :srazy_url %><br />
+    <%= f.text_field :srazy_url %>
+  </div>
+  <div class="field">
+    <%= f.label :gplus_url %><br />
+    <%= f.text_field :gplus_url %>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>
