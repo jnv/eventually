@@ -40,7 +40,8 @@ function EventuallyBookmarklet(data, document, window)
             var str = this.data[prop];
             this.data[prop] = new Date(str);
         }, this);
-        this.end = addMinutes(this.data.start, this.data.end);
+        this.data.end = addMinutes(this.data.start, this.data.length);
+        this.data.end_date = this.data.end;
 
         this.topLevel = document;
 
@@ -51,7 +52,8 @@ function EventuallyBookmarklet(data, document, window)
             start: '',
             venue: '',
             description: '',
-            end: ''
+            end: '',
+            length: ''
         };
 
         this.propFn = {};
@@ -109,6 +111,7 @@ function EventuallyBookmarklet(data, document, window)
     {
         proto(SrazyMapper.prototype).constructor.call(this, data);
         this.topLevel = document.querySelector('#frm-newForm,#frm-editForm');
+        this.data.end_date = this.data.end;
 
         this.propFn = {
             description: function (target, value)
@@ -120,51 +123,195 @@ function EventuallyBookmarklet(data, document, window)
                 target.value = value;
                 target.dispatchEvent(createEvent('keyup'));
             },
-            date: function (target, d) //2013-04-18
+            date: function (target, d, self)
             {
-                var day = d.getDate();
-                var month = d.getMonth() + 1;
-                var year = d.getFullYear();
-                target.value = year + '-' + pad(month) + '-' + pad(day);
+                target.value = self.formatDate(d);
             },
-            start: function (target, d, self) // 19:00
+            end_date: function (target, d, self)
+            {
+                target.value = self.formatDate(d);
+            },
+            start: function (target, d, self)
             {
                 target.value = self.formatTime(d);
             },
             end: function (target, d, self)
             {
                 target.value = self.formatTime(d);
+            },
+            visitors: function (target)
+            {
+                target.checked = true;
+            },
+            visitors_avatars: function (target)
+            {
+                target.checked = true;
             }
         };
 
         this.selectors = {
             name: '[name=subtitle]',
-            date: '[name=start],[name=end]',
+            date: '[name=start]',
+            end_date: '[name=end]',
             start: '[name=start_time]',
             venue: '[name=venue]',
-
-            // description: '[name=desc]', //Textarea
-            end: '[name=end_time]'
+            description: '[name=desc]', //Textarea
+            end: '[name=end_time]',
+            facebook_id: '[name=fbId]',
+            visitors: '[name=visitors]',
+            visitors_avatars: '[name=visitors_avatars]'
         };
     }
-
     inheritPrototype(SrazyMapper, Mapper);
-    SrazyMapper.prototype.formatTime = function (d)
+    SrazyMapper.prototype.formatTime = function (d) // 19:00
     {
         var hour = d.getUTCHours();
         var minute = d.getUTCMinutes();
         return pad(hour) + ':' + pad(minute);
     };
+    SrazyMapper.prototype.formatDate = function (d) //2013-04-18
+    {
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+        return year + '-' + pad(month) + '-' + pad(day);
+    };
 
-    // var Facebook = {
-    //     name: '[name=title]',
-    //     description: '[name=details]',
-    //     venue: '[name=location]',
-    //     date: '[name=dateIntlDisplay]', // 4/3/2013
-    //     start: '[name=when_time_display_time]' // 7 pm
-    //     //when_time = h * 60 * 60
+    function FacebookMapper(data)
+    {
+        proto(FacebookMapper.prototype).constructor.call(this, data);
+        this.topLevel = document.querySelector('form .eventsCreate');
 
-    // };
+        this.propFn = {
+            name: function (target, value, self)
+            {
+                target.value = self.getName();
+            },
+            description: function (target, value)
+            {
+                target.onkeydown();
+                target.innerHTML = value;
+                // target.dispatchEvent(createEvent('keyup'));
+            },
+            date: function (target, d, self)
+            {
+                target.value = self.formatDate(d);
+            },
+            venue: function (target, value)
+            {
+                target.value = value;
+                target.dispatchEvent(createEvent('keydown'));
+            },
+            start: function (target, d, self)
+            {
+                target.value = d.getUTCHours() * 60 * 60;
+            },
+            end: function (target, d, self)
+            {
+                target.value = self.formatTime(d);
+            },
+            end_date: function (target, d, self)
+            {
+                target.value = self.formatDate(d);
+            }
+        };
+
+        this.selectors = {
+            name: '[name=title]',
+            description: '[name=details]', //Textarea
+            venue: '[name=location]',
+            date: '[name=when_date]',
+            start: '[name=when_time]' //when_time = h * 60 * 60
+            // end: '[name=end_time]',
+            // end_date: '[name=end]',
+        };
+    }
+    inheritPrototype(FacebookMapper, Mapper);
+    FacebookMapper.prototype.getName = function ()
+    {
+        return this.data.series + ': ' + this.data.name + ' (' + this.data.speaker + ')';
+    };
+    FacebookMapper.prototype.formatTime = function (d) // 19:00
+    {
+        var hour = d.getUTCHours();
+        var minute = d.getUTCMinutes();
+        return pad(hour) + ':' + pad(minute);
+    };
+    FacebookMapper.prototype.formatDate = function (d) //4/19/2013
+    {
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+        return month + '/' + day + '/' + year;
+    };
+
+    function GPlusMapper(data)
+    {
+        proto(GPlusMapper.prototype).constructor.call(this, data);
+        this.topLevel = document.querySelector('form .eventsCreate');
+
+        this.propFn = {
+            name: function (target, value, self)
+            {
+                target.value = self.getName();
+            },
+            description: function (target, value)
+            {
+                target.onkeydown();
+                target.innerHTML = value;
+                // target.dispatchEvent(createEvent('keyup'));
+            },
+            date: function (target, d, self)
+            {
+                target.value = self.formatDate(d);
+            },
+            venue: function (target, value)
+            {
+                target.value = value;
+                target.dispatchEvent(createEvent('keydown'));
+            },
+            start: function (target, d, self)
+            {
+                target.value = d.getUTCHours() * 60 * 60;
+            },
+            end: function (target, d, self)
+            {
+                target.value = self.formatTime(d);
+            },
+            end_date: function (target, d, self)
+            {
+                target.value = self.formatDate(d);
+            }
+        };
+
+        this.selectors = {
+            name: '[name=title]',
+            description: '[name=details]', //Textarea
+            venue: '[name=location]',
+            date: '[name=when_date]',
+            start: '[name=when_time]' //when_time = h * 60 * 60
+            // end: '[name=end_time]',
+            // end_date: '[name=end]',
+        };
+    }
+    inheritPrototype(GPlusMapper, Mapper);
+    GPlusMapper.prototype.getName = function ()
+    {
+        return this.data.series + ': ' + this.data.name + ' (' + this.data.speaker + ')';
+    };
+    GPlusMapper.prototype.formatTime = function (d) // 19:00
+    {
+        var hour = d.getUTCHours();
+        var minute = d.getUTCMinutes();
+        return pad(hour) + ':' + pad(minute);
+    };
+    GPlusMapper.prototype.formatDate = function (d) //4/19/2013
+    {
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+        return month + '/' + day + '/' + year;
+    };
 
     // var location = document.URL;
     var hostname = document.location.hostname;
