@@ -17,6 +17,23 @@ function EventuallyBookmarklet(data, document, window)
         evt.initEvent(type, true, true);
         return evt;
     }
+    function createKeyboardEvent(type, charCode)
+    {
+        var keyboardEvent = document.createEvent("KeyboardEvent");
+        keyboardEvent.initKeyEvent(
+                   type, // event type : keydown, keyup, keypress
+                    true, // bubbles
+                    true, // cancelable
+                    window, // viewArg: should be window
+                    false, // ctrlKeyArg
+                    false, // altKeyArg
+                    false, // shiftKeyArg
+                    false, // metaKeyArg
+                    0, // keyCodeArg : unsigned long the virtual key code, else 0
+                    charCode // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+        );
+        return keyboardEvent;
+    }
 
     function pad(num)
     {
@@ -193,9 +210,9 @@ function EventuallyBookmarklet(data, document, window)
             },
             description: function (target, value)
             {
-                target.onkeydown();
+                target.focus();
+                target.dispatchEvent(createEvent('keydown'));
                 target.innerHTML = value;
-                // target.dispatchEvent(createEvent('keyup'));
             },
             date: function (target, d, self)
             {
@@ -203,8 +220,15 @@ function EventuallyBookmarklet(data, document, window)
             },
             venue: function (target, value)
             {
+                // for(var i = 0; i < value.length; i++)
+                // {
+                //     target.dispatchEvent(createKeyboardEvent('keydown', value.charCodeAt(i)));
+                // }
+                target.focus();
                 target.value = value;
-                target.dispatchEvent(createEvent('keydown'));
+                // target.dispatchEvent(createKeyboardEvent('keyup'), 0);
+                target.dispatchEvent(createEvent('keyup'));
+                // target.blur();
             },
             start: function (target, d, self)
             {
