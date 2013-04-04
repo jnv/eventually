@@ -89,6 +89,8 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.0.0.beta1)
       sprockets-rails (~> 2.0.0.rc3)
+    rails-i18n (0.7.3)
+      i18n (~> 0.5)
     railties (4.0.0.beta1)
       actionpack (= 4.0.0.beta1)
       activesupport (= 4.0.0.beta1)
@@ -139,6 +141,7 @@ DEPENDENCIES
   minitest-rails
   mongoid!
   rails (~> 4.0.0.beta1)
+  rails-i18n
   requirejs-rails!
   sass-rails (~> 4.0.0.beta1)
   thin
