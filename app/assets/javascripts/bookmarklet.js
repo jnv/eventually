@@ -175,9 +175,9 @@ function EventuallyBookmarklet(data, document, window)
     };
     SrazyMapper.prototype.formatDate = function (d) //2013-04-18
     {
-        var day = d.getDate();
-        var month = d.getMonth() + 1;
-        var year = d.getFullYear();
+        var day = d.getUTCDate();
+        var month = d.getUTCMonth() + 1;
+        var year = d.getUTCFullYear();
         return year + '-' + pad(month) + '-' + pad(day);
     };
 
